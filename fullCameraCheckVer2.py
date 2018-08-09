@@ -31,7 +31,8 @@ def checkMotion(baseImage, imageInQuestion):
     im1 = Image.open(baseImage)
     im2 = Image.open(imageInQuestion)
     diff=ImageChops.difference(im1, im2)
-    #diff.save("differencePicture.jpg")
+    print diff
+    diff.save("differencePicture.jpg")
     invertedImage = diff
 
     #Close the originals
@@ -59,7 +60,8 @@ def checkMotion(baseImage, imageInQuestion):
     nonZeroDiff = cv.countNonZero(diffMask)
     pixelsDiff = nonZeroDiff
     totalPixels = 2048*1536
-    percentDiff =(nonZeroDiff/totalPixels)
+    percentDiff = float(nonZeroDiff)/totalPixels
+    print percentDiff
     #print(nonZeroDiff/totalPixels)
 
     #Return the difference picture (in cv form)
@@ -111,8 +113,14 @@ def checkColors(im, topColor, bottomColor):
 def checkPerson(desiredCamera, startTime, endTime):
 
     #Get base path
-    baseImage = "floor2BaseImages/" + str(desiredCamera) + ".jpg"
-    filePath = "AllCameraImages\\" + str(desiredCamera)
+    baseImage = "/Users/dhrub/Documents/GitHub/SensorSummarization/SensorSummarization/floor2BaseImages/" + str(desiredCamera) + ".jpg"
+    #filePath = "AllCameraImages\\" + str(desiredCamera)
+    filePath = "/Users/dhrub/Documents/Intern/For_Kyle/Images_AllCamera/AllCameraImages/" + str(desiredCamera)
+    print 'base'
+    print baseImage
+    print 'file'
+    print filePath
+    print 'Everything else'
     counter = 0
     blue = "blue"
     black = "black"
@@ -128,11 +136,12 @@ def checkPerson(desiredCamera, startTime, endTime):
 
     #Get the image that matches the time frame
     photosFound = []                                      #Grab the photos that match the search
-    searchString = filePath + "\\"+str(desiredCamera) +"-"+ str(startTime)+"*.jpg"
-    searchString2 = filePath + "\\"+str(desiredCamera) +"-"+ str(startTime+1)+"*.jpg"
+    searchString = filePath + "/"+str(desiredCamera) +"-"+ str(startTime)+"*.jpg"
+    searchString2 = filePath + "/"+str(desiredCamera) +"-"+ str(startTime+1)+"*.jpg"
     photosFound = glob.glob(searchString)                   #Add the photos found to the array
     photosFound.extend(glob.glob(searchString2))
-    #print(photosFound)
+    print(photosFound)
+    
     if str(photosFound) !="[]":
         print(photosFound[0])
     else:                                                   #If no image is in that range (Should be rare)
@@ -146,7 +155,7 @@ def checkPerson(desiredCamera, startTime, endTime):
     
     newIm = Image.open(imageInQuestion)
     diffImage = checkMotion(baseImage, imageInQuestion)
-    #print(percentDiff)
+    print(percentDiff)
 
     if (percentDiff > 0.001):                           #If a person was detected 
         #print(imagePath +" " + "has motion")
@@ -186,13 +195,14 @@ def checkPerson(desiredCamera, startTime, endTime):
 #########################################################################
 #Initial Variables
 
-desiredCamera = 10
-startTime = 164141
-endTime = 164230
+desiredCamera = 12
+startTime = 20180718164258
+endTime = 20180718164230
 
 #Run the method
 result = checkPerson(desiredCamera,startTime, endTime)
 print(result['personFound'])
+print(result['photoName'])
 
 """
 
